@@ -60,6 +60,8 @@ public class ProfitService {
         profitRepository.save(profit);
 //        expensesRepository.findExpensesByExpenseType(request.getExpenseType());
 //        incomeRepository.findByIncomeType(request.getIncomeType());
+        User user = new User();
+        response.setEmail(user.getEmail());
         response.setNetAmount(netAmount);
         response.setIncome(incomeRepository.findAll());
         response.setExpenses(expensesRepository.findAll());
