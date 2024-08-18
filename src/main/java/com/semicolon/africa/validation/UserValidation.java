@@ -1,12 +1,21 @@
 package com.semicolon.africa.validation;
 
+import com.semicolon.africa.dtos.request.ExpenseRequest;
+import com.semicolon.africa.dtos.request.IncomeRequest;
 import com.semicolon.africa.dtos.request.LoginRequest;
 import com.semicolon.africa.dtos.request.RegisterUserRequest;
 import com.semicolon.africa.exceptions.InvalidDetailsException;
+import com.semicolon.africa.models.User;
 
 public class UserValidation {
 
     public static void validateInput(LoginRequest request){
+        if(!request.getEmail().contains("mail.com")){
+            throw new InvalidDetailsException("Invalid email");
+        }
+    }
+
+    public static void validateEmail(User request){
         if(!request.getEmail().contains("mail.com")){
             throw new InvalidDetailsException("Invalid email");
         }

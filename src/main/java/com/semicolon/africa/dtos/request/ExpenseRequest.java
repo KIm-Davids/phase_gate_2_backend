@@ -15,6 +15,7 @@ public class ExpenseRequest {
 
     @Id
     private String id;
+    private String email;
     private String description;
     private ExpenseType expenseType;
     private double totalExpenseAmount;

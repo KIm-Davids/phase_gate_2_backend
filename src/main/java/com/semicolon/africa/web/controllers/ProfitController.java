@@ -1,6 +1,6 @@
 package com.semicolon.africa.web.controllers;
 
-import com.semicolon.africa.dtos.request.ExpenseRequest;
+import com.semicolon.africa.dtos.request.LoginRequest;
 import com.semicolon.africa.dtos.request.ProfitRequest;
 import com.semicolon.africa.dtos.response.*;
 import com.semicolon.africa.services.ExpenseServices;
@@ -21,8 +21,18 @@ public class ProfitController {
     private ExpenseServices expenseServices;
     private ProfitService profitService;
 
+    @PostMapping("/check-if-logged-in")
+    public ResponseEntity<?> checkIfTheUserIsLoggedIn(@RequestBody LoginRequest loginRequest){
+        try {
+            ProfitResponse response = profitService.checkIfUserIsOnline(loginRequest);
+            return new ResponseEntity<>(new ApiResponse(true, response),OK);
+        }catch(Exception exception){
+            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/get-profit")
-    public ResponseEntity<?> getIncome(@RequestBody ProfitRequest profitRequest) {
+    public ResponseEntity<?> getProfitAmount(@RequestBody ProfitRequest profitRequest) {
         try {
             ProfitResponse profitResponse = profitService.calculateProfit(profitRequest);
             return new ResponseEntity<>(new ApiResponse(true, profitResponse), OK);

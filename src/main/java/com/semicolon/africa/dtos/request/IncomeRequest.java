@@ -14,6 +14,7 @@ public class IncomeRequest {
 
     @Id
     private String id;
+    private String email;
     private String description;
     private IncomeType incomeType;
     private double totalIncomeAmount;

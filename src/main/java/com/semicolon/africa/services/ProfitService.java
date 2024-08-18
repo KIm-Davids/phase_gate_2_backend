@@ -1,16 +1,24 @@
 package com.semicolon.africa.services;
 
+import com.semicolon.africa.dtos.request.LoginRequest;
 import com.semicolon.africa.dtos.request.ProfitRequest;
 import com.semicolon.africa.dtos.response.DeleteAllResponse;
 import com.semicolon.africa.dtos.response.ProfitResponse;
+import com.semicolon.africa.exceptions.InvalidDetailsException;
+import com.semicolon.africa.exceptions.UserLoginException;
+import com.semicolon.africa.exceptions.UserNotFoundException;
 import com.semicolon.africa.models.Expenses;
 import com.semicolon.africa.models.Income;
 import com.semicolon.africa.models.Profit;
+import com.semicolon.africa.models.User;
 import com.semicolon.africa.repository.ExpensesRepository;
 import com.semicolon.africa.repository.IncomeRepository;
 import com.semicolon.africa.repository.ProfitRepository;
+import com.semicolon.africa.repository.UserRepsoitory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.semicolon.africa.validation.ProfitValidation.checkForNetLoss;
@@ -22,18 +30,21 @@ public class ProfitService {
     private final ProfitRepository profitRepository;
     private final IncomeRepository incomeRepository;
     private final ExpensesRepository expensesRepository;
+    private final UserRepsoitory userRepository;
+//    private final Expenses expenses;
 
-    private ProfitService(ProfitRepository profitRepository, IncomeRepository incomeRepository, ExpensesRepository expensesRepository){
+    private ProfitService(ProfitRepository profitRepository, IncomeRepository incomeRepository, ExpensesRepository expensesRepository, UserRepsoitory userRepository){
         this.profitRepository = profitRepository;
         this.expensesRepository = expensesRepository;
         this.incomeRepository = incomeRepository;
+        this.userRepository = userRepository;
     }
 
     public ProfitResponse calculateProfit(ProfitRequest request){
         Profit profit = new Profit();
         ProfitResponse response = new ProfitResponse();
-
         validateProfitRequest(request);
+//        checkIfUserIsLoggedIn(loginRequest);
         Expenses expenses = setExpenseFromProfitRequest(request);
         Income income = setIncomeFromProfitRequest(request);
 
@@ -45,11 +56,15 @@ public class ProfitService {
 
 
         profit.setNetProfit(netAmount);
+        profit.setLocalDateTime(LocalDateTime.now());
         profitRepository.save(profit);
-        response.setMessage(netAmount);
-        response.setExpenses(expensesRepository.findAll());
+//        expensesRepository.findExpensesByExpenseType(request.getExpenseType());
+//        incomeRepository.findByIncomeType(request.getIncomeType());
+        response.setNetAmount(netAmount);
         response.setIncome(incomeRepository.findAll());
-        response.setAdvice(advice);
+        response.setExpenses(expensesRepository.findAll());
+        response.setLocalDateTime(LocalDateTime.now());
+
         return response;
     }
 
@@ -81,11 +96,86 @@ public class ProfitService {
         return advice;
     }
 
-//    private void getTotalExpenses(){
-//        List<Expenses> totalExpenses = expensesRepository.findByAmount();
-////        for(int counter = 0; counter < totalExpenses.size(); counter++){
-////            if(totalExpenses.get(counter) > )
-////        }
-////        totalExpenses.
-//    }
+    private void checkIfUserIsLoggedIn(LoginRequest loginRequest){
+        if(userRepository.findUserByEmail(loginRequest.getEmail()).equals(loginRequest.getEmail())){
+            User user = userRepository.findUserByEmail(loginRequest.getEmail());
+            user.setLoggedIn(true);
+        }
+        User user = userRepository.findUserByEmail(loginRequest.getEmail());
+
+        if(!user.isLoggedIn()){
+            throw new UserLoginException("Please Ensure you are logged in !");
+        }
+    }
+
+    private ProfitResponse findDataByUser(LoginRequest loginRequest){
+        ProfitResponse profitResponse = new ProfitResponse();
+       if(!userRepository.findUserByEmail(loginRequest.getEmail()).equals(loginRequest.getEmail())){
+           throw new InvalidDetailsException("Please Login Again !");
+       }
+
+        if(userRepository.findUserByEmail(loginRequest.getEmail()).equals(loginRequest.getEmail())){
+            User user = userRepository.findUserByEmail(loginRequest.getEmail());
+            user.setLoggedIn(true);
+        }
+
+
+//        Profit profit = profitRepository.findDataByUser(loginRequest.getEmail());
+        User response = createAListForUser(loginRequest);
+
+        String email = response.getEmail();
+        List<Expenses> expensesList = response.getExpenses();
+        List<Income> incomeList= response.getIncome();
+
+        profitResponse.setEmail(email);
+        profitResponse.setIncome(incomeList);
+        profitResponse.setExpenses(expensesList);
+
+       return profitResponse;
+    }
+
+    private User createAListForUser(LoginRequest loginRequest){
+        Expenses expense = new Expenses();
+        Income income = new Income();
+
+        User user = userRepository.findUserByEmail(loginRequest.getEmail());
+        user.setExpenseType(expense.getExpenseType());
+        user.setIncomeType(income.getIncomeType());
+
+        expensesRepository.save(expense);
+        incomeRepository.save(income);
+
+        double expenses = expensesRepository.findExpensesByExpenseType(user.getExpenseType()).getTotalExpenses();
+        double incomeAmount = incomeRepository.findByIncomeType(user.getIncomeType()).getTotalIncome();
+
+        expense.setTotalExpenses(expenses);
+        income.setTotalIncome(incomeAmount);
+//
+//        user.getExpenses().add(expense);
+//        user.getIncome().add(income);
+
+        return user;
+    }
+
+    private void validateIfUserExists(LoginRequest request){
+        boolean userExists = userRepository.existsByEmail(request.getEmail());
+        if(!userExists){
+            throw new UserNotFoundException("User does not exists");
+        }
+    }
+
+    public ProfitResponse checkIfUserIsOnline(LoginRequest request){
+        validateIfUserExists(request);
+        User user = userRepository.findUserByEmail(request.getEmail());
+        boolean userOnline = user.isLoggedIn();
+
+        checkIfUserIsLoggedIn(request);
+
+        if (!userOnline) {
+            throw new UserLoginException("Please Login !");
+        }
+        createAListForUser(request);
+        return findDataByUser(request);
+    }
+
 }

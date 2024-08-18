@@ -52,10 +52,4 @@ public class ExpenseController {
         }
     }
 
-//    @GetMapping()
-//    public ResponseEntity<?> getExpenses(@RequestBody ExpenseRequest request){
-//        try{
-//
-//        }
-    //}
 }
