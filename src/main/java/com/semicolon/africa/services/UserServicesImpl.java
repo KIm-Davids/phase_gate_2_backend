@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.semicolon.africa.maputility.UserUtility.*;
+import static com.semicolon.africa.validation.UserValidation.validateInput;
+import static com.semicolon.africa.validation.UserValidation.validateInputForNullEntry;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +33,8 @@ public class UserServicesImpl implements UserServices{
     @Override
     public RegisterUserResponse registerUserWith(RegisterUserRequest request) {
         validateExistingEmail(request.getEmail());
+        validateInput(request);
+        validateInputForNullEntry(request);
         User user = new User();
         addRequestToUser(request, user);
         user.setPassword(request.getPassword());
@@ -85,17 +89,7 @@ public class UserServicesImpl implements UserServices{
                 .orElseThrow(()->new UserNotFoundException("user not found"));
     }
 
-    private void validateInput(LoginRequest request){
-        if(!request.getEmail().contains("mail.com")){
-            throw new InvalidDetailsException("Invalid email");
-        }
-    }
 
-    private void validateInputForNullEntry(LoginRequest request){
-        if(request.getEmail().contains(" ")){
-            throw new InvalidDetailsException("Input Email again !");
-        }
-    }
     private LoginResponse loginResponse(User user){
         LoginResponse response = new LoginResponse();
         response.setEmail(user.getEmail());

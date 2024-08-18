@@ -17,11 +17,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Document
 public class Income {
-    private String description;
-    private LocalDateTime localDateTime;
-
     @Id
     private String id;
     private IncomeType incomeType;
     private double totalIncome;
+    private String description;
+    private LocalDateTime localDateTime;
+
 }

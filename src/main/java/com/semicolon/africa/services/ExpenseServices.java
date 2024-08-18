@@ -35,7 +35,6 @@ public class ExpenseServices implements ExpenseServiceInterface{
         ExpenseResponse response = new ExpenseResponse();
         Expenses expensesToSave = addRequestToExpense(request, expenses);
         repository.save(expensesToSave);
-
         response.setMessage("Expense Added Successfully");
         return response;
     }

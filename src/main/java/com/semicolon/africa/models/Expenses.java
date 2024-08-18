@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Document
 public class Expenses {
-    private String description;
-    private LocalDateTime localDateTime = LocalDateTime.now();
-
     @Id
     private String id;
     private ExpenseType expenseType;
     private double totalExpenses;
+    private String description;
+    private LocalDateTime localDateTime = LocalDateTime.now();
+
 }

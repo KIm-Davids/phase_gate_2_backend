@@ -18,6 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/api/v1/expenses")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class ExpenseController {
     private ExpenseServices services;
 
