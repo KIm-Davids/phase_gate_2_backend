@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.semicolon.africa.maputility.ExpenseUtility.addRequestToExpense;
+import static com.semicolon.africa.maputility.UserUtility.mapUserToExpenses;
 import static com.semicolon.africa.validation.MoneyAmountValidation.validateExpenseAmount;
 import static com.semicolon.africa.validation.MoneyAmountValidation.validateUpdatedExpenses;
 import static com.semicolon.africa.validation.UserValidation.validateEmail;
@@ -39,7 +40,7 @@ public class ExpenseServices implements ExpenseServiceInterface{
         validateExpenseAmount(request);
         Expenses expenses = new Expenses();
         ExpenseResponse response = new ExpenseResponse();
-
+        mapUserToExpenses(request);
         List<Expenses> expensesList = new ArrayList<>();
         Expenses expensesToSave = addRequestToExpense(request, expenses);
         expensesList.add(expensesToSave);

@@ -12,7 +12,7 @@ public class Profit {
 
     @Id
     private String id;
-    private String netProfit;
+    private double netProfit;
     private String netLoss;
     private LocalDateTime localDateTime;
 

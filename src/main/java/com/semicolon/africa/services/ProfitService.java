@@ -1,5 +1,6 @@
 package com.semicolon.africa.services;
 
+import com.semicolon.africa.dtos.request.ExpenseRequest;
 import com.semicolon.africa.dtos.request.LoginRequest;
 import com.semicolon.africa.dtos.request.ProfitRequest;
 import com.semicolon.africa.dtos.response.DeleteAllResponse;
@@ -42,6 +43,7 @@ public class ProfitService {
 
     public ProfitResponse calculateProfit(ProfitRequest request){
         Profit profit = new Profit();
+        User user = new User();
         ProfitResponse response = new ProfitResponse();
         validateProfitRequest(request);
 //        checkIfUserIsLoggedIn(loginRequest);
@@ -55,19 +57,54 @@ public class ProfitService {
         String netAmount = checkForNetLoss(amount);
 
 
-        profit.setNetProfit(netAmount);
+
+        Expenses saveTotalExpense = calculateTotalExpenses(user);
+        Income saveTotalIncome = calculateTotalIncome(user);
+
+        double totalProfit = saveTotalIncome.getTotalIncome() - saveTotalExpense.getTotalExpenses();
+        profit.setNetProfit(totalProfit);
+        profitRepository.save(profit);
+        expensesRepository.save(saveTotalExpense);
+        incomeRepository.save(saveTotalIncome);
+
+//        profit.setNetProfit(netAmount);
         profit.setLocalDateTime(LocalDateTime.now());
         profitRepository.save(profit);
-//        expensesRepository.findExpensesByExpenseType(request.getExpenseType());
-//        incomeRepository.findByIncomeType(request.getIncomeType());
-        User user = new User();
+
         response.setEmail(user.getEmail());
         response.setNetAmount(netAmount);
+
         response.setIncome(incomeRepository.findAll());
         response.setExpenses(expensesRepository.findAll());
         response.setLocalDateTime(LocalDateTime.now());
 
         return response;
+    }
+
+    private Expenses calculateTotalExpenses(User user) {
+        List<Expenses> expenseList = expensesRepository.findAll();
+        Expenses saveTotalExpense = new Expenses();
+
+        double expenseListAmount = 0;
+        for (Expenses value : expenseList) {
+            expenseListAmount += value.getTotalExpenses();
+        }
+
+        saveTotalExpense.setTotalExpenses(expenseListAmount);
+        return saveTotalExpense;
+    }
+
+    private Income calculateTotalIncome(User user){
+        List<Income> incomeList = incomeRepository.findAll();
+
+        double incomeListAmount = 0;
+        for(Income value : incomeList){
+            incomeListAmount += value.getTotalIncome();
+        }
+
+        Income saveTotalExpense = new Income();
+        saveTotalExpense.setTotalIncome(incomeListAmount);
+        return saveTotalExpense;
     }
 
     public DeleteAllResponse deleteAllResponse(){

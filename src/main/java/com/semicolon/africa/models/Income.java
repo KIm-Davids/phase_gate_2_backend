@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,5 +24,6 @@ public class Income {
     private double totalIncome;
     private String description;
     private LocalDateTime localDateTime;
+//    private List<Income> listOfIncome;
 
 }
