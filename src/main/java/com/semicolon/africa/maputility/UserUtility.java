@@ -34,18 +34,18 @@ public class UserUtility {
     public static void mapUserToExpenses(ExpenseRequest request){
         User user = new User();
         user.setExpenseType(request.getExpenseType());
-        ExpenseRequest expenses = new ExpenseRequest();
-        expenses.setTotalExpenseAmount(request.getTotalExpenseAmount());
-        user.setExpenses((List<Expenses>) expenses);
+//        ExpenseRequest expenses = new ExpenseRequest();
+//        expenses.setTotalExpenseAmount(request.getTotalExpenseAmount());
+//        user.setExpenses((List<Expenses>) expenses);
     }
 
 
     public static void mapUserToIncome(IncomeRequest request){
         User user = new User();
         user.setIncomeType(request.getIncomeType());
-        IncomeRequest income = new IncomeRequest();
-        income.setTotalIncomeAmount(request.getTotalIncomeAmount());
-        user.setIncome((List<Income>) income);
+//        IncomeRequest income = new IncomeRequest();
+//        income.setTotalIncomeAmount(request.getTotalIncomeAmount());
+//        user.setIncome((List<Income>) income);
     }
 
 }

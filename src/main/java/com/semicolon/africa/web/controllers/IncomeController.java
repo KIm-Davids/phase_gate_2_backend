@@ -28,7 +28,7 @@ public class IncomeController {
             IncomeResponse response = services.addIncomeToRepository(request);
             return new ResponseEntity<>(new ApiResponse(true, response), OK);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception),BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()),BAD_REQUEST);
         }
     }
 
@@ -38,7 +38,7 @@ public class IncomeController {
             UpdateIncomeResponse response = services.updateIncomeById(request);
             return new ResponseEntity<>(new ApiResponse(true, response),CREATED);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_GATEWAY);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_GATEWAY);
         }
     }
 
@@ -48,12 +48,8 @@ public class IncomeController {
             DeleteIncomeResponse response = services.deleteIncomeByIncomeType(request);
             return new ResponseEntity<>(new ApiResponse(true, response),CREATED);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_GATEWAY);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_GATEWAY);
         }
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> getProfitAmount(@RequestBody ){
-//
-//    }
 }

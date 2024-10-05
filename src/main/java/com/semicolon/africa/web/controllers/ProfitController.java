@@ -15,6 +15,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/api/v1/profitAmount")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class ProfitController {
 
     private IncomeServices incomeServices;
@@ -27,17 +28,17 @@ public class ProfitController {
             ProfitResponse response = profitService.checkIfUserIsOnline(loginRequest);
             return new ResponseEntity<>(new ApiResponse(true, response),OK);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_REQUEST);
         }
     }
 
     @GetMapping("/get-profit")
-    public ResponseEntity<?> getProfitAmount(@RequestBody ProfitRequest profitRequest) {
+    public ResponseEntity<?> getProfitAmount(ProfitRequest profitRequest) {
         try {
             ProfitResponse profitResponse = profitService.calculateProfit(profitRequest);
             return new ResponseEntity<>(new ApiResponse(true, profitResponse), OK);
         } catch (Exception exception) {
-            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_GATEWAY);
         }
     }
 
@@ -49,7 +50,7 @@ public class ProfitController {
             DeleteAllResponse profitResponse = profitService.deleteAllResponse();
             return new ResponseEntity<>(new ApiResponse(true, expenseResponse), OK);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_GATEWAY);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_GATEWAY);
         }
     }
 }

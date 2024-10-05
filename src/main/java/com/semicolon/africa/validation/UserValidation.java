@@ -34,8 +34,8 @@ public class UserValidation {
     }
 
     public static void validateInputForNullEntry(RegisterUserRequest request){
-        if(request.getEmail().contains(" ")){
-            throw new InvalidDetailsException("Input Email again !");
+        if(request.getEmail().contains(" ") || request.getFirstName().contains(" ") || request.getLastName().contains(" ")){
+            throw new InvalidDetailsException("Invalid Entry pls try again !");
         }
     }
 }

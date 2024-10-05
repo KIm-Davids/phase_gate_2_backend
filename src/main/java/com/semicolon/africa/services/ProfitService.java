@@ -72,8 +72,7 @@ public class ProfitService {
         profitRepository.save(profit);
 
         response.setEmail(user.getEmail());
-        response.setNetAmount(netAmount);
-
+        response.setNetAmount(totalProfit);
         response.setIncome(incomeRepository.findAll());
         response.setExpenses(expensesRepository.findAll());
         response.setLocalDateTime(LocalDateTime.now());
@@ -189,9 +188,7 @@ public class ProfitService {
 
         expense.setTotalExpenses(expenses);
         income.setTotalIncome(incomeAmount);
-//
-//        user.getExpenses().add(expense);
-//        user.getIncome().add(income);
+
 
         return user;
     }

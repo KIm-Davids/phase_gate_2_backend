@@ -15,7 +15,7 @@ public class ProfitResponse {
 //    private Income profit;
     private String message;
     private String email;
-    private String netAmount;
+    private double netAmount;
     private LocalDateTime localDateTime;
     private List<Income> income;
     private List<Expenses> expenses;

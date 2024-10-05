@@ -28,7 +28,7 @@ public class ExpenseController {
             ExpenseResponse response = services.addExpensesToRepository(request);
             return new ResponseEntity<>(new ApiResponse(true, response),OK);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception),BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()),BAD_REQUEST);
         }
     }
 
@@ -38,7 +38,7 @@ public class ExpenseController {
             UpdateExpenseResponse response = services.updateExpensesByExpenseType(request);
             return new ResponseEntity<>(new ApiResponse(true, response),CREATED);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception),BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()),BAD_REQUEST);
         }
     }
 
@@ -48,7 +48,7 @@ public class ExpenseController {
             DeleteExpenseResponse response = services.deleteExpensesByExpenseType(expenseType);
             return new ResponseEntity<>(new ApiResponse(true, response), OK);
         }catch(Exception exception){
-            return new ResponseEntity<>(new ApiResponse(false, exception),BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()),BAD_REQUEST);
         }
     }
 

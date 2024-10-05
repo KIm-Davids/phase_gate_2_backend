@@ -39,7 +39,7 @@ public class UserController {
             LoginResponse response = userService.login(loginRequest);
             return new ResponseEntity<>(new ApiResponse(true, response), OK);
         } catch (MyExceptionClass exception) {
-            return new ResponseEntity<>(new ApiResponse(false, exception), BAD_GATEWAY);
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), BAD_GATEWAY);
         }
     }
 
